@@ -1,5 +1,5 @@
-import model
-import data
+import ttpfl.model as model
+import ttpfl.data as data
 
 from prompt_toolkit import prompt
 from prompt_toolkit.completion import WordCompleter

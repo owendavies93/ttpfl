@@ -1,5 +1,5 @@
-import cmd
-import data
+import ttpfl.cmd as cmd
+import ttpfl.data as data
 import sys
 
 def main():
