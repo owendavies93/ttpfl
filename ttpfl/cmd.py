@@ -81,6 +81,11 @@ def execute_command(players, points, prices, tours, current_picks, already_picke
         for i in current_picks:
             print(players[i])
 
+    elif cmd[0] == "clear":
+        print("Clearing...")
+        current_picks = []
+        already_picked = []
+
     elif cmd[0] == "exit":
         print("Bye!")
         exit()
