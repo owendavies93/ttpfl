@@ -1,6 +1,9 @@
 import model
 import data
 
+from prompt_toolkit import prompt
+from prompt_toolkit.completion import WordCompleter
+
 def run_model(players, points, prices, tours, current_picks, already_picked):
     budget, decisions = model.run_model(points, prices, tours, current_picks, already_picked)
 
@@ -29,12 +32,19 @@ def run_model(players, points, prices, tours, current_picks, already_picked):
 
     print("Budget remaining: {}".format(budget))
 
-def execute_command(cmd, players, points, prices, tours, current_picks, already_picked):
+def execute_command(players, points, prices, tours, current_picks, already_picked):
+    cmd = input().split()
+
+    if len(cmd) == 0:
+        print("Invalid command")
+        return current_picks, already_picked
+
     if cmd[0] == "run":
         run_model(players, points, prices, tours, current_picks, already_picked)
 
-    elif cmd[0] == "pick":
-        player = " ".join(cmd[1:])
+    elif cmd[0] == "p":
+        player_completer = WordCompleter(players)
+        player = prompt("Enter player: ", completer=player_completer)
         player_id = data.get_player_id(players, player)
         if player_id == -1:
             print("Player {} not found".format(player))
@@ -54,7 +64,8 @@ def execute_command(cmd, players, points, prices, tours, current_picks, already_
                 run_model(players, points, prices, tours, current_picks, already_picked)
 
     elif cmd[0] == "rm":
-        player = " ".join(cmd[1:])
+        player_completer = WordCompleter(players)
+        player = prompt("Enter player: ", completer=player_completer)
         player_id = data.get_player_id(players, player)
         if player_id == -1:
             print("Player {} not found".format(player))

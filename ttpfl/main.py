@@ -13,7 +13,7 @@ def main():
 
     while True:
         print("Enter command: ", end="")
-        current_picks, already_picked = cmd.execute_command(input().split(), players, points, prices, tours, current_picks, already_picked)
+        current_picks, already_picked = cmd.execute_command(players, points, prices, tours, current_picks, already_picked)
 
 
 if __name__ == "__main__":
