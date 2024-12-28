@@ -39,11 +39,18 @@ def execute_command(cmd, players, points, prices, tours, current_picks, already_
         if player_id == -1:
             print("Player {} not found".format(player))
         else:
-            print("Picking {}".format(player))
-            current_picks.append(player_id)
+            budget = 20000
+            for i in current_picks:
+                budget -= prices[i]
 
-        print("Rerunning model...")
-        run_model(players, points, prices, tours, current_picks, already_picked)
+            if budget < prices[player_id]:
+                print("Not enough budget to pick {}".format(player))
+            else:
+                print("Picking {}".format(player))
+                current_picks.append(player_id)
+                print("Rerunning model...")
+                run_model(players, points, prices, tours, current_picks, already_picked)
+
     elif cmd[0] == "rm":
         player = " ".join(cmd[1:])
         player_id = data.get_player_id(players, player)
