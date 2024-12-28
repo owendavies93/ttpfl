@@ -10,6 +10,7 @@ def run_model(expected_points, prices, tours, current_picks, already_picked):
         for i in range(num_players)
     ]
 
+    budget = 20000
     total_spend = 0
     for i in range(num_players):
         if i in current_picks:
@@ -18,7 +19,7 @@ def run_model(expected_points, prices, tours, current_picks, already_picked):
 
     model += sum(decisions[i] * expected_points[i] for i in range(num_players)), "Objective"
 
-    model += sum(decisions[i] * prices[i] for i in range(num_players)) <= 20000 - total_spend, "Budget"
+    model += sum(decisions[i] * prices[i] for i in range(num_players)) <= budget, "Budget"
     model += sum(decisions) == 10, "Team Size"
 
     for i in range(num_players):
@@ -30,4 +31,4 @@ def run_model(expected_points, prices, tours, current_picks, already_picked):
 
     model.solve(pulp.PULP_CBC_CMD(msg=False))
 
-    return decisions
+    return budget - total_spend, decisions
