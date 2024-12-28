@@ -33,6 +33,7 @@ def run_model(players, points, prices, tours, current_picks, already_picked):
 def execute_command(cmd, players, points, prices, tours, current_picks, already_picked):
     if cmd[0] == "run":
         run_model(players, points, prices, tours, current_picks, already_picked)
+
     elif cmd[0] == "pick":
         player = " ".join(cmd[1:])
         player_id = data.get_player_id(players, player)
@@ -62,10 +63,12 @@ def execute_command(cmd, players, points, prices, tours, current_picks, already_
 
         print("Rerunning model...")
         run_model(players, points, prices, tours, current_picks, already_picked)
+
     elif cmd[0] == "show":
         print("Current picks:")
         for i in current_picks:
             print(players[i])
+
     elif cmd[0] == "exit":
         print("Bye!")
         exit()
