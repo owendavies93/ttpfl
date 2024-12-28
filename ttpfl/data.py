@@ -1,10 +1,27 @@
 import csv
+import os
+
+state_file = "/tmp/ttpfl.state"
 
 def get_player_id(players, player):
     for i in range(len(players)):
         if players[i] == player:
             return i
     return -1
+
+def save_state(current_picks, already_picked):
+    with open(state_file, "w") as f:
+        f.write(" ".join(str(i) for i in current_picks) + "\n")
+        f.write(" ".join(str(i) for i in already_picked) + "\n")
+
+def load_state():
+    if not os.path.exists(state_file):
+        return [], []
+
+    with open(state_file, "r") as f:
+        current_picks = [int(i) for i in f.readline().split()]
+        already_picked = [int(i) for i in f.readline().split()]
+        return current_picks, already_picked
 
 def get_player_data(wta_file, atp_file):
     players = []

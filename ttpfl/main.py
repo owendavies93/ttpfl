@@ -6,8 +6,8 @@ def main():
     print("Starting...")
     wta_file = sys.argv[1]
     atp_file = sys.argv[2]
-    current_picks = []
-    already_picked = []
+
+    current_picks, already_picked = data.load_state()
     
     players, points, prices, tours = data.get_player_data(wta_file, atp_file)
 

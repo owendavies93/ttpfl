@@ -85,4 +85,6 @@ def execute_command(players, points, prices, tours, current_picks, already_picke
         print("Bye!")
         exit()
 
+    data.save_state(current_picks, already_picked)
+
     return current_picks, already_picked
