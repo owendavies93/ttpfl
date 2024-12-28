@@ -3,11 +3,32 @@ import data
 import sys
 
 def run_model(players, points, prices, tours, current_picks, already_picked):
-    decisions = model.run_model(points, prices, tours, current_picks, already_picked)
+    budget, decisions = model.run_model(points, prices, tours, current_picks, already_picked)
 
+    selected_players = []
+    team = []
     for i in range(len(decisions)):
         if decisions[i].value() == 1:
-            print(players[i], points[i], prices[i], tours[i])
+            if i in current_picks:
+                team.append((players[i], points[i]))
+            else:
+                selected_players.append((players[i], points[i]))
+    
+    team.sort(key=lambda x: x[1], reverse=True)
+    print("Picked players:")
+    for player, points in team:
+        print("{}: {}".format(player, points))
+
+    print("\n")
+
+    selected_players.sort(key=lambda x: x[1], reverse=True)
+    print("Best remaining players:")
+    for player, points in selected_players:
+        print("{}: {}".format(player, points))
+
+    print("\n")
+
+    print("Budget remaining: {}".format(budget))
 
 def execute_command(cmd, players, points, prices, tours, current_picks, already_picked):
     if cmd[0] == "run":
