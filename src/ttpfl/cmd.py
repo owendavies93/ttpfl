@@ -48,7 +48,7 @@ def execute_command(players, points, prices, tours, current_picks, already_picke
         player_id = data.get_player_id(players, player)
         if player_id == -1:
             print("Player {} not found".format(player))
-        elif player_id in already_picked:
+        elif player_id in current_picks:
             print("Player {} already picked".format(player))
         else:
             budget = 20000
