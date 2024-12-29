@@ -2,6 +2,7 @@
 
 use Mojo::Base -strict;
 
+use Encode qw(encode_utf8);
 use JSON::XS;
 
 my $json_file = $ARGV[0];
@@ -10,6 +11,7 @@ open my $fh, '<', $json_file or die "Failed to open $json_file: $!";
 while (<$fh>) {
     my $json = decode_json($_);
     for my $key (@{$json->{rankings}}) {
-        say join "\t", $key->{rowName}, $key->{points}, $key->{points}, $key->{ranking};
+        my $name = encode_utf8($key->{rowName});
+        say join "\t", $name, $key->{points}, $key->{ranking};
     }
 }
