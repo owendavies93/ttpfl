@@ -12,21 +12,21 @@ def run_model(players, points, prices, tours, current_picks, already_picked):
     for i in range(len(decisions)):
         if decisions[i].value() == 1:
             if i in current_picks:
-                team.append((players[i], points[i]))
+                team.append((players[i], points[i], prices[i]))
             else:
-                selected_players.append((players[i], points[i]))
+                selected_players.append((players[i], points[i], prices[i]))
     
     team.sort(key=lambda x: x[1], reverse=True)
     print("Picked players:")
-    for player, points in team:
-        print("{}: {}".format(player, points))
+    for player, points, price in team:
+        print("{}: {} ({})".format(player, points, price))
 
     print("\n")
 
     selected_players.sort(key=lambda x: x[1], reverse=True)
     print("Best remaining players:")
-    for player, points in selected_players:
-        print("{}: {}".format(player, points))
+    for player, points, price in selected_players:
+        print("{}: {} ({})".format(player, points, price))
 
     print("\n")
 
