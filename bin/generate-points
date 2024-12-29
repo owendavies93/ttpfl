@@ -1,0 +1,63 @@
+#! /usr/bin/env perl
+
+use Mojo::Base -strict;
+
+use Encode qw(encode_utf8);
+use Text::Unidecode;
+
+use lib 'lib';
+
+use TTPFL::Config qw(get_weights);
+use TTPFL::Points qw(get_weighted_points);
+
+my $players_file = $ARGV[0];
+my $points_file = $ARGV[1];
+my $eoy_rank_file = $ARGV[2];
+
+my $players = {};
+my $rev_players = {};
+open my $fh, '<', $players_file or die "Could not open $players_file: $!";
+while (<$fh>) {
+    chomp;
+    my ($id, $first_name, $last_name) = split /,/, $_;
+    next if $id !~ /^\d+$/;
+
+    if (!defined $first_name || !defined $last_name) {
+        next;
+    }
+
+    $players->{"$first_name $last_name"} = $id;
+    $rev_players->{$id} = "$first_name $last_name";
+}
+close $fh;
+
+my $ranking_data = [];
+open $fh, '<', $points_file or die "Could not open $points_file: $!";
+while (<$fh>) {
+    chomp;
+    my ($date, $rank, $player, $ps) = split /,/, $_;
+    next if $date !~ /^\d+$/;
+    push @$ranking_data, [$date, $rank, $player, $ps];
+}
+close $fh;
+
+my $eoy_rank = {};
+open $fh, '<', $eoy_rank_file or die "Could not open $eoy_rank_file: $!";
+while (<$fh>) {
+    chomp;
+    my ($player, $points) = split /\t/, $_;
+    $player = unidecode($player);
+    my $id = $players->{$player};
+    next if !defined $id;
+    $eoy_rank->{$id} = $points;
+}
+close $fh;
+
+my $weights = get_weights();
+
+for my $id (keys %$eoy_rank) {
+    my $name = $rev_players->{$id};
+    my $points = $eoy_rank->{$id};
+    my $ps = get_weighted_points($id, $weights, $ranking_data, $eoy_rank);
+    say join "\t", $name, $ps, $points;
+}
