@@ -1,0 +1,32 @@
+#! /usr/bin/env perl
+
+use Mojo::Base -strict;
+
+use lib 'lib';
+
+use TTPFL::Players qw(get_player_from_last_name_initial);
+
+my $injury_list_file = $ARGV[0];
+my $players_file = $ARGV[1];
+
+my @players;
+open my $fh, '<', $players_file or die "Could not open $players_file: $!";
+while (<$fh>) {
+    chomp;
+    my ($name) = split /\t/;
+    push @players, $name;
+}
+
+my @injured;
+open $fh, '<', $injury_list_file or die "Could not open $injury_list_file: $!";
+while (<$fh>) {
+    chomp;
+    my ($date, $last_name, $initial) = split /\s+/;
+    my $player = get_player_from_last_name_initial($last_name, $initial, \@players);
+
+    if (defined $player) {
+        push @injured, $player;
+    }
+}
+
+say join "\n", @injured;
