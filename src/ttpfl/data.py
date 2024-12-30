@@ -23,6 +23,17 @@ def load_state():
         already_picked = [int(i) for i in f.readline().split()]
         return current_picks, already_picked
 
+def get_injury_list(injury_list_file, players):
+    injury_list = []
+    with open(injury_list_file, "r") as f:
+        for line in f:
+            for i in range(len(players)):
+                if players[i] == line.strip():
+                    injury_list.append(i)
+                    break
+
+    return injury_list
+
 def get_player_data(wta_file, atp_file):
     players = []
     points = []

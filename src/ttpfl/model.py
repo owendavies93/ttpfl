@@ -1,6 +1,6 @@
 import pulp
 
-def run_model(expected_points, prices, tours, current_picks, already_picked):
+def run_model(expected_points, prices, tours, current_picks, already_picked, injury_list):
     model = pulp.LpProblem("TTPFL", pulp.LpMaximize)
 
     num_players = len(expected_points)
@@ -25,6 +25,9 @@ def run_model(expected_points, prices, tours, current_picks, already_picked):
     for i in range(num_players):
         if i in already_picked:
             model += decisions[i] == 0, "Gone {}".format(i)
+
+        if i in injury_list:
+            model += decisions[i] == 0, "Injured {}".format(i)
 
     model += sum(decisions[i] for i in range(num_players) if tours[i] == 'wta') == 5, "WTA"
     model += sum(decisions[i] for i in range(num_players) if tours[i] == 'atp') == 5, "ATP"

@@ -4,8 +4,8 @@ import ttpfl.data as data
 from prompt_toolkit import prompt
 from prompt_toolkit.completion import WordCompleter
 
-def run_model(players, points, prices, tours, current_picks, already_picked):
-    budget, decisions = model.run_model(points, prices, tours, current_picks, already_picked)
+def run_model(players, points, prices, tours, current_picks, already_picked, injury_list):
+    budget, decisions = model.run_model(points, prices, tours, current_picks, already_picked, injury_list)
 
     selected_players = []
     team = []
@@ -32,7 +32,7 @@ def run_model(players, points, prices, tours, current_picks, already_picked):
 
     print("Budget remaining: {}".format(budget))
 
-def execute_command(players, points, prices, tours, current_picks, already_picked):
+def execute_command(players, points, prices, tours, current_picks, already_picked, injury_list):
     cmd = input().split()
 
     if len(cmd) == 0:
@@ -40,7 +40,7 @@ def execute_command(players, points, prices, tours, current_picks, already_picke
         return current_picks, already_picked
 
     if cmd[0] == "run":
-        run_model(players, points, prices, tours, current_picks, already_picked)
+        run_model(players, points, prices, tours, current_picks, already_picked, injury_list)
 
     elif cmd[0] == "p":
         player_completer = WordCompleter(players)
@@ -61,7 +61,7 @@ def execute_command(players, points, prices, tours, current_picks, already_picke
                 print("Picking {}".format(player))
                 current_picks.append(player_id)
                 print("Rerunning model...")
-                run_model(players, points, prices, tours, current_picks, already_picked)
+                run_model(players, points, prices, tours, current_picks, already_picked, injury_list)
 
     elif cmd[0] == "rm":
         player_completer = WordCompleter(players)
@@ -74,7 +74,7 @@ def execute_command(players, points, prices, tours, current_picks, already_picke
             already_picked.append(player_id)
 
         print("Rerunning model...")
-        run_model(players, points, prices, tours, current_picks, already_picked)
+        run_model(players, points, prices, tours, current_picks, already_picked, injury_list)
 
     elif cmd[0] == "show":
         print("Current picks:")
