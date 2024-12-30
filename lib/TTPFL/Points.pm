@@ -2,7 +2,7 @@ package TTPFL::Points;
 
 use Mojo::Base 'Exporter';
 
-our @EXPORT_OK = qw(get_weighted_points);
+our @EXPORT_OK = qw(get_baseline_points get_weighted_deltas);
 
 use Const::Fast;
 use List::Util qw(sum);
@@ -24,8 +24,22 @@ const my @first_mondays => (
 
 const my $debug => 0;
 
+sub get_baseline_points {
+    my ($player_id, $gs_points, $rank) = @_;
+
+    for my $r (sort { $a <=> $b } keys %$gs_points) {
+        if ($rank <= $r) {
+            _debug("Baseline points for $player_id: $gs_points->{$r}");
+            return $gs_points->{$r};
+        }
+    }
+
+    _debug("Baseline points for $player_id: 0");
+    return 0;
+}
+
 # Assumes we're looking back at 2024
-sub get_weighted_points {
+sub get_weighted_deltas {
     my ($player_id, $weights, $ranking_data, $eoy_points) = @_;
 
     my $points = {};
@@ -37,7 +51,7 @@ sub get_weighted_points {
     }
 
     my @month_starts = reverse @first_mondays;
-    my $last = $eoy_points->{$player_id};
+    my $last = $eoy_points->{$player_id}->[1];
     my $months = 1;
     my $total_points = 0;
     for my $month_start (@month_starts) {

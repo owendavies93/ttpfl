@@ -7,8 +7,8 @@ use Text::Unidecode;
 
 use lib 'lib';
 
-use TTPFL::Config qw(get_weights);
-use TTPFL::Points qw(get_weighted_points);
+use TTPFL::Config qw(get_weights get_gs_points);
+use TTPFL::Points qw(get_weighted_deltas get_baseline_points);
 
 my $players_file = $ARGV[0];
 my $points_file = $ARGV[1];
@@ -45,19 +45,23 @@ my $eoy_rank = {};
 open $fh, '<', $eoy_rank_file or die "Could not open $eoy_rank_file: $!";
 while (<$fh>) {
     chomp;
-    my ($player, $points) = split /\t/, $_;
+    my ($player, $price, $rank) = split /\t/, $_;
     $player = unidecode($player);
     my $id = $players->{$player};
     next if !defined $id;
-    $eoy_rank->{$id} = $points;
+    $eoy_rank->{$id} = [$rank, $price];
 }
 close $fh;
 
 my $weights = get_weights();
+my $gs_points = get_gs_points();
 
 for my $id (keys %$eoy_rank) {
     my $name = $rev_players->{$id};
-    my $points = $eoy_rank->{$id};
-    my $ps = get_weighted_points($id, $weights, $ranking_data, $eoy_rank);
-    say join "\t", $name, $ps, $points;
+    my ($rank, $price) = @{$eoy_rank->{$id}};
+    my $delta = get_weighted_deltas($id, $weights, $ranking_data, $eoy_rank);
+    my $baseline = get_baseline_points($id, $gs_points, $rank);
+
+    my $ps = $baseline + $delta;
+    say join "\t", $name, $ps, $price;
 }
