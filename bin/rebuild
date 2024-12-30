@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+
+./bin/generate-points data/tennis_wta/wta_players.csv data/tennis_wta/wta_rankings_current.csv data/wta-500 | sort -k2 -t$'\t' -nr > data/wta-predictions
+./bin/generate-points data/tennis_atp/atp_players.csv data/tennis_atp/atp_rankings_current.csv data/atp-500 | sort -k2 -t$'\t' -nr > data/atp-predictions
