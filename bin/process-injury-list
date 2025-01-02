@@ -6,8 +6,9 @@ use lib 'lib';
 
 use TTPFL::Players qw(get_player_from_last_name_initial);
 
-my $injury_list_file = $ARGV[0];
-my $players_file = $ARGV[1];
+my $players_file = $ARGV[0];
+my $injury_list_file = $ARGV[1];
+my $exclude_list_file = $ARGV[2];
 
 my @players;
 open my $fh, '<', $players_file or die "Could not open $players_file: $!";
@@ -30,3 +31,13 @@ while (<$fh>) {
 }
 
 say join "\n", @injured;
+
+my @exclude;
+open $fh, '<', $exclude_list_file or die "Could not open $exclude_list_file: $!";
+while (<$fh>) {
+    chomp;
+    my ($name) = split /\t/;
+    push @exclude, $name;
+}
+
+say join "\n", @exclude;

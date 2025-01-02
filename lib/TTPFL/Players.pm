@@ -20,7 +20,7 @@ sub get_player_from_last_name_initial {
     if (scalar @candidates == 1) {
         return $candidates[0];
     } elsif (scalar @candidates > 1) {
-        die "Multiple candidates for $last_name $initial: @candidates";
+        die "Multiple candidates for $last_name $initial: " . join(", ", @candidates);
     }
 
     return undef;
